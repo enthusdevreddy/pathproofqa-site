@@ -1,0 +1,708 @@
+<!doctype html>
+<html lang="en-CA">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#080f0c">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%232fbf71'/%3E%3Cpath d='M9 16.5l4.5 4.5L23 11' fill='none' stroke='%2306130c' stroke-width='3.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<link rel="canonical" href="https://pathproofqa.ca/">
+<meta property="og:title" content="PathProof QA — critical paths automated in 10 business days">
+<meta property="og:description" content="AI-accelerated QA services. Senior-reviewed Playwright automation, fixed price only. Based in BC, Canada.">
+<meta property="og:url" content="https://pathproofqa.ca/">
+<meta property="og:type" content="website">
+<title>PathProof QA — AI-accelerated QA services</title>
+<meta name="description" content="PathProof — AI-accelerated QA services. Your critical user paths automated in 10 business days, senior-reviewed, fixed price only.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700;800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: dark-first premium SaaS — 12-col max-width container, glass cards, one light-green accent (QA goes green) */
+:root{
+  --bg:#080f0c; --bg-2:#0d1712; --surface:rgba(220,255,235,.045); --surface-2:rgba(220,255,235,.08);
+  --line:rgba(255,255,255,.09); --line-2:rgba(255,255,255,.16);
+  --fg:#eef2f8; --fg-2:#aeb8c8; --fg-3:#7a8699;
+  --accent:#2fbf71; --accent-2:#6ee7a8; --accent-ink:#06130c; --accent-glow:rgba(47,191,113,.35);
+  --pass:#22c55e; --warn:#f59e0b;
+  --term-bg:#050b08; --glass:rgba(10,18,14,.62);
+  --shadow:0 20px 60px rgba(0,0,0,.45);
+  --font-display:"Sora","Inter",system-ui,sans-serif;
+  --font-body:"Inter",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --font-mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+  --radius:18px; --radius-s:12px; --ease:cubic-bezier(.22,1,.36,1);
+  color-scheme:dark;
+}
+@media (prefers-color-scheme: light){
+  :root:not([data-theme="dark"]){
+    --bg:#f6faf7; --bg-2:#eaf3ed; --surface:rgba(255,255,255,.72); --surface-2:rgba(255,255,255,.95);
+    --line:rgba(14,45,28,.09); --line-2:rgba(14,45,28,.16);
+    --fg:#0f1f16; --fg-2:#3c5547; --fg-3:#64796c;
+    --accent:#1f8a4f; --accent-2:#1a7a46; --accent-ink:#ffffff; --accent-glow:rgba(31,138,79,.22);
+    --term-bg:#0d1712; --glass:rgba(246,250,247,.74);
+    --shadow:0 20px 50px rgba(14,45,28,.10);
+    color-scheme:light;
+  }
+}
+:root[data-theme="light"]{
+  --bg:#f6faf7; --bg-2:#eaf3ed; --surface:rgba(255,255,255,.72); --surface-2:rgba(255,255,255,.95);
+  --line:rgba(14,45,28,.09); --line-2:rgba(14,45,28,.16);
+  --fg:#0f1f16; --fg-2:#3c5547; --fg-3:#64796c;
+  --accent:#1f8a4f; --accent-2:#1a7a46; --accent-ink:#ffffff; --accent-glow:rgba(31,138,79,.22);
+  --term-bg:#0d1712; --glass:rgba(246,250,247,.74);
+  --shadow:0 20px 50px rgba(14,45,28,.10);
+  color-scheme:light;
+}
+
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--font-body);font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+img,svg{max-width:100%}
+a{color:inherit;text-decoration:none}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+:focus-visible{outline:2px solid var(--accent-2);outline-offset:3px;border-radius:6px}
+h1,h2,h3{font-family:var(--font-display);letter-spacing:-.02em;text-wrap:balance;margin:0}
+h1{font-size:clamp(2.4rem,5.6vw,4.4rem);line-height:1.05;font-weight:800}
+h2{font-size:clamp(1.9rem,3.6vw,2.9rem);line-height:1.1;font-weight:700}
+h3{font-size:1.25rem;line-height:1.25;font-weight:600}
+p{margin:0}
+.wrap{width:min(1180px,100%);margin-inline:auto;padding-inline:clamp(16px,4vw,32px)}
+section{padding-block:clamp(72px,10vw,128px);position:relative}
+.eyebrow{font-size:.74rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--accent-2)}
+.sub{color:var(--fg-2);font-size:1.08rem;max-width:62ch}
+.sec-head{display:grid;gap:14px;max-width:720px;margin-bottom:clamp(36px,5vw,56px)}
+.num{font-variant-numeric:tabular-nums}
+
+/* Backdrop */
+.bgfx{position:fixed;inset:0;z-index:-1;overflow:hidden;pointer-events:none}
+.bgfx .orb{position:absolute;border-radius:50%;filter:blur(90px);opacity:.55}
+.bgfx .o1{width:620px;height:620px;background:var(--accent);top:-240px;right:-160px;opacity:.28}
+.bgfx .o2{width:520px;height:520px;background:#2dd4bf;bottom:-260px;left:-200px;opacity:.16}
+.bgfx .grid{position:absolute;inset:0;background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);background-size:64px 64px;mask-image:radial-gradient(ellipse at 50% 0%,#000 20%,transparent 70%);-webkit-mask-image:radial-gradient(ellipse at 50% 0%,#000 20%,transparent 70%)}
+
+/* Preloader */
+.preloader{position:fixed;inset:0;z-index:100;background:var(--bg);display:grid;place-items:center;transition:opacity .5s var(--ease),visibility .5s}
+.preloader.done{opacity:0;visibility:hidden}
+.preloader .mark{display:flex;align-items:center;gap:14px;font-family:var(--font-display);font-weight:700;font-size:1.3rem}
+.preloader .ring{width:44px;height:44px}
+.preloader .ring circle{fill:none;stroke:var(--line-2);stroke-width:3}
+.preloader .ring .arc{stroke:var(--accent);stroke-dasharray:120;stroke-dashoffset:120;stroke-linecap:round;animation:draw 1s var(--ease) forwards}
+.preloader .ring .tick{fill:none;stroke:var(--pass);stroke-width:3.5;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:30;stroke-dashoffset:30;animation:draw .4s .8s var(--ease) forwards}
+@keyframes draw{to{stroke-dashoffset:0}}
+
+/* Nav */
+.nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:50;backdrop-filter:blur(18px) saturate(1.4);-webkit-backdrop-filter:blur(18px) saturate(1.4);background:var(--glass);border-bottom:1px solid var(--line)}
+.nav .wrap{display:flex;align-items:center;justify-content:space-between;height:68px;gap:16px}
+.logo{display:flex;align-items:center;gap:10px;font-family:var(--font-display);font-weight:700;font-size:1.15rem;letter-spacing:-.01em}
+.logo .lm{width:30px;height:30px;border-radius:9px;background:linear-gradient(135deg,var(--accent),#a7f3d0);display:grid;place-items:center;box-shadow:0 6px 18px var(--accent-glow)}
+.logo .lm svg{width:16px;height:16px}
+.logo em{font-style:normal;color:var(--accent-2)}
+.links{display:flex;gap:28px;align-items:center}
+.links a{font-size:.93rem;font-weight:500;color:var(--fg-2);position:relative;padding-block:4px}
+.links a::after{content:"";position:absolute;left:0;bottom:0;height:2px;width:100%;background:var(--accent-2);transform:scaleX(0);transform-origin:left;transition:transform .3s var(--ease)}
+.links a:hover{color:var(--fg)}
+.links a:hover::after{transform:scaleX(1)}
+.burger{display:none;width:42px;height:42px;border-radius:10px;border:1px solid var(--line);place-items:center}
+.burger span{display:block;width:18px;height:2px;background:var(--fg);margin:2.5px 0;transition:transform .3s var(--ease),opacity .2s}
+.burger[aria-expanded="true"] span:nth-child(1){transform:translateY(4.5px) rotate(45deg)}
+.burger[aria-expanded="true"] span:nth-child(2){opacity:0}
+.burger[aria-expanded="true"] span:nth-child(3){transform:translateY(-4.5px) rotate(-45deg)}
+.mobile{display:none;border-top:1px solid var(--line);background:var(--glass);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px)}
+.mobile.open{display:block}
+.mobile a{display:block;padding:14px clamp(16px,4vw,32px);font-weight:500;border-bottom:1px solid var(--line)}
+
+/* Buttons */
+.btn{display:inline-flex;align-items:center;gap:10px;padding:14px 22px;border-radius:999px;font-weight:600;font-size:.97rem;transition:transform .25s var(--ease),box-shadow .25s var(--ease),background .25s;will-change:transform;white-space:nowrap}
+.btn-primary{background:var(--accent);color:var(--accent-ink);box-shadow:0 10px 30px var(--accent-glow)}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 16px 40px var(--accent-glow);background:var(--accent-2)}
+.btn-ghost{border:1px solid var(--line-2);background:var(--surface);color:var(--fg)}
+.btn-ghost:hover{transform:translateY(-2px);border-color:var(--accent-2)}
+.btn-sm{padding:10px 18px;font-size:.9rem}
+.btn svg{width:16px;height:16px;transition:transform .25s var(--ease)}
+.btn:hover svg{transform:translateX(3px)}
+
+/* Hero */
+.hero{padding-block:clamp(56px,8vw,110px) clamp(48px,6vw,80px)}
+.hero .wrap{display:grid;grid-template-columns:1.05fr .95fr;gap:clamp(32px,5vw,64px);align-items:center}
+.hero-copy{display:grid;gap:22px}
+.hero h1 em{font-style:normal;background:linear-gradient(90deg,var(--accent-2),#c6f6e1);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero .ctas{display:flex;gap:14px;flex-wrap:wrap;align-items:center}
+.hero .note{display:flex;gap:18px;flex-wrap:wrap;font-size:.86rem;color:var(--fg-3)}
+.hero .note span{display:inline-flex;align-items:center;gap:7px}
+.hero .note svg{width:14px;height:14px;color:var(--pass)}
+.pill{display:inline-flex;align-items:center;gap:8px;padding:6px 12px 6px 8px;border-radius:999px;border:1px solid var(--line-2);background:var(--surface);font-size:.8rem;font-weight:500;color:var(--fg-2);width:max-content}
+.pill i{width:8px;height:8px;border-radius:50%;background:var(--pass);box-shadow:0 0 0 4px rgba(34,197,94,.18);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 4px rgba(34,197,94,.18)}50%{box-shadow:0 0 0 7px rgba(34,197,94,.06)}}
+
+.terminal{position:relative;border-radius:var(--radius);border:1px solid var(--line-2);background:var(--term-bg);box-shadow:var(--shadow);overflow:hidden;color:#dbe4f0;font-family:var(--font-mono);font-size:.82rem;line-height:1.7;min-width:0}
+.terminal .bar{display:flex;align-items:center;gap:8px;padding:12px 16px;border-bottom:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.03)}
+.terminal .bar i{width:11px;height:11px;border-radius:50%;background:#3a4556}
+.terminal .bar i:nth-child(1){background:#ff5f57}.terminal .bar i:nth-child(2){background:#febc2e}.terminal .bar i:nth-child(3){background:#28c840}
+.terminal .bar b{margin-left:auto;font-weight:500;font-size:.72rem;color:#7a8699;letter-spacing:.06em}
+.terminal .body{padding:18px 18px 20px;min-height:300px}
+.terminal .ln{display:flex;gap:10px;align-items:flex-start;opacity:0;transform:translateY(6px)}
+.terminal .ln.show{opacity:1;transform:none;transition:opacity .35s var(--ease),transform .35s var(--ease)}
+.terminal .cmd{color:#9ae6c3}.terminal .dim{color:#7a8699}.terminal .ok{color:#4ade80}.terminal .ms{margin-left:auto;color:#7a8699;font-size:.74rem;white-space:nowrap}
+.terminal .chk{width:16px;height:16px;flex:none;margin-top:4px}
+.terminal .chk circle{fill:none;stroke:#4ade80;stroke-width:2;stroke-dasharray:50;stroke-dashoffset:50}
+.terminal .chk path{fill:none;stroke:#4ade80;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:14;stroke-dashoffset:14}
+.terminal .ln.show .chk circle{animation:draw .5s var(--ease) forwards}
+.terminal .ln.show .chk path{animation:draw .35s .3s var(--ease) forwards}
+.terminal .sum{margin-top:12px;padding-top:12px;border-top:1px dashed rgba(255,255,255,.12);display:flex;gap:16px;flex-wrap:wrap;font-size:.78rem}
+.terminal .sum b{color:#4ade80;font-weight:600}
+.terminal .cursor{display:inline-block;width:8px;height:14px;background:#9ae6c3;vertical-align:-2px;animation:blink 1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+.terminal .glow{position:absolute;inset:auto -20% -40% -20%;height:60%;background:radial-gradient(ellipse at center,var(--accent-glow),transparent 70%);pointer-events:none}
+
+/* Marquee */
+.marquee{border-block:1px solid var(--line);background:var(--surface);overflow:hidden;padding-block:14px}
+.marquee .track{display:flex;gap:0;width:max-content;animation:mq 34s linear infinite}
+.marquee:hover .track{animation-play-state:paused}
+.marquee span{display:inline-flex;align-items:center;gap:18px;padding-inline:18px;font-size:.84rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--fg-2);white-space:nowrap}
+.marquee span::after{content:"";width:6px;height:6px;border-radius:50%;background:var(--accent-2)}
+@keyframes mq{to{transform:translateX(-50%)}}
+
+/* Stats */
+.stats{padding-block:clamp(48px,6vw,72px)}
+.stats .row{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.stat{padding:26px 26px 22px;border-radius:var(--radius);border:1px solid var(--line);background:var(--surface);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+.stat b{display:block;font-family:var(--font-display);font-size:clamp(2rem,4vw,2.8rem);font-weight:800;letter-spacing:-.03em;line-height:1;color:var(--fg)}
+.stat b small{font-size:.5em;font-weight:700;color:var(--accent-2);margin-left:4px}
+.stat>span{display:block;margin-top:10px;color:var(--fg-2);font-size:.95rem}
+
+/* Services */
+.cards{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}
+.card{position:relative;padding:28px;border-radius:var(--radius);border:1px solid var(--line);background:var(--surface);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);display:grid;gap:14px;align-content:start;transition:transform .35s var(--ease),border-color .35s,box-shadow .35s;transform-style:preserve-3d;min-width:0}
+.card::before{content:"";position:absolute;inset:0;border-radius:inherit;background:radial-gradient(600px circle at var(--mx,50%) var(--my,50%),var(--accent-glow),transparent 45%);opacity:0;transition:opacity .4s;pointer-events:none}
+.card:hover{border-color:var(--line-2);box-shadow:var(--shadow)}
+.card:hover::before{opacity:.7}
+.card.flag{border-color:rgba(110,231,168,.5)}
+.card .top{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;flex-wrap:wrap}
+.card .top>div:first-child{flex:1 1 200px;min-width:0}
+.card .price{font-family:var(--font-display);font-weight:700;font-size:1.25rem;color:var(--accent-2);white-space:nowrap}
+.badge{display:inline-flex;align-items:center;gap:6px;padding:5px 10px;border-radius:999px;font-size:.72rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;border:1px solid var(--line-2);color:var(--fg-2);background:var(--surface-2)}
+.badge.acc{border-color:transparent;background:var(--accent);color:var(--accent-ink)}
+.card .for{color:var(--fg-2);font-size:.97rem}
+.card ul{list-style:none;margin:0;padding:0;display:grid;gap:9px}
+.card li{display:flex;gap:10px;align-items:flex-start;font-size:.95rem;color:var(--fg-2)}
+.card li svg{flex:none;width:18px;height:18px;margin-top:2px;color:var(--pass)}
+.card .foot{margin-top:auto;padding-top:6px}
+.card .foot a{font-weight:600;color:var(--accent-2);display:inline-flex;align-items:center;gap:6px}
+.card .foot a svg{width:14px;height:14px;transition:transform .25s var(--ease)}
+.card .foot a:hover svg{transform:translateX(3px)}
+.addons{margin-top:22px;display:flex;flex-wrap:wrap;gap:10px;align-items:center;padding:18px 22px;border-radius:var(--radius-s);border:1px dashed var(--line-2)}
+.addons b{font-size:.78rem;letter-spacing:.1em;text-transform:uppercase;color:var(--fg-2);margin-right:6px}
+.chip{padding:6px 12px;border-radius:999px;border:1px solid var(--line);background:var(--surface);font-size:.86rem}
+.chip.new{border-color:var(--accent);color:var(--accent-2)}
+
+/* Compare */
+.compare{display:grid;grid-template-columns:1fr auto 1fr;gap:18px;align-items:stretch}
+.cmp{padding:30px;border-radius:var(--radius);border:1px solid var(--line);background:var(--surface);display:grid;gap:14px;align-content:start;min-width:0}
+.cmp.win{border-color:rgba(110,231,168,.5);background:linear-gradient(180deg,rgba(47,191,113,.12),var(--surface) 60%)}
+.cmp .k{font-size:.78rem;letter-spacing:.1em;text-transform:uppercase;color:var(--fg-3);font-weight:600}
+.cmp .big{font-family:var(--font-display);font-size:clamp(2rem,4.2vw,3rem);font-weight:800;letter-spacing:-.03em;line-height:1}
+.cmp .big small{font-size:.42em;font-weight:600;color:var(--fg-2);letter-spacing:0}
+.cmp ul{list-style:none;margin:0;padding:0;display:grid;gap:8px;color:var(--fg-2);font-size:.95rem}
+.cmp li{display:flex;gap:10px}
+.cmp li::before{content:"";flex:none;width:6px;height:6px;border-radius:50%;background:var(--fg-3);margin-top:9px}
+.cmp.win li::before{background:var(--accent-2)}
+.vs{display:grid;place-items:center;font-family:var(--font-display);font-weight:700;color:var(--fg-3);font-size:.9rem}
+.vs span{width:52px;height:52px;border-radius:50%;border:1px solid var(--line-2);display:grid;place-items:center;background:var(--bg-2)}
+.bars{display:grid;gap:12px;margin-top:4px}
+.bar-row{display:grid;grid-template-columns:150px 1fr auto;gap:12px;align-items:center;font-size:.9rem;color:var(--fg-2)}
+.bar-row .b{height:12px;border-radius:999px;background:var(--surface-2);overflow:hidden}
+.bar-row .b i{display:block;height:100%;width:0;border-radius:inherit;background:var(--fg-3);transition:width 1.2s var(--ease)}
+.bar-row.acc .b i{background:linear-gradient(90deg,var(--accent),#c6f6e1)}
+.bar-row.vis .b i{width:var(--w)}
+.fine{font-size:.8rem;color:var(--fg-3);margin-top:16px}
+
+/* Process */
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;position:relative}
+.steps::before{content:"";position:absolute;left:5%;right:5%;top:30px;height:2px;background:linear-gradient(90deg,transparent,var(--line-2),var(--line-2),transparent)}
+.step{position:relative;display:grid;gap:12px;padding-top:0;min-width:0}
+.step .dot{width:60px;height:60px;border-radius:50%;border:1px solid var(--line-2);background:var(--bg-2);display:grid;place-items:center;font-family:var(--font-display);font-weight:700;color:var(--accent-2);position:relative;z-index:1;box-shadow:0 0 0 8px var(--bg)}
+.step h3{font-size:1.08rem}
+.step p{color:var(--fg-2);font-size:.94rem}
+.step .t{font-size:.74rem;letter-spacing:.1em;text-transform:uppercase;color:var(--fg-3);font-weight:600}
+
+/* Case study */
+.case{border-radius:var(--radius);border:1px dashed var(--line-2);background:var(--surface);padding:clamp(28px,4vw,44px);display:grid;grid-template-columns:1.2fr .8fr;gap:32px;align-items:center;position:relative;overflow:hidden}
+.case .tag{position:absolute;top:18px;right:18px}
+.case blockquote{margin:0;font-family:var(--font-display);font-size:clamp(1.3rem,2.4vw,1.8rem);font-weight:600;line-height:1.3;color:var(--fg-2)}
+.case blockquote mark{background:none;color:var(--fg);box-shadow:inset 0 -.35em var(--accent-glow)}
+.case .who{margin-top:16px;color:var(--fg-3);font-size:.9rem}
+.case .nums{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.case .n{padding:18px;border-radius:var(--radius-s);border:1px solid var(--line);background:var(--bg-2)}
+.case .n b{display:block;font-family:var(--font-display);font-size:1.9rem;font-weight:800;letter-spacing:-.03em;color:var(--fg-3)}
+.case .n span{font-size:.82rem;color:var(--fg-3)}
+
+/* FAQ */
+.faq{max-width:820px}
+.q{border-bottom:1px solid var(--line)}
+.q button{width:100%;display:flex;justify-content:space-between;align-items:center;gap:20px;padding:22px 4px;text-align:left;font-family:var(--font-display);font-weight:600;font-size:1.05rem}
+.q button .ic{flex:none;width:30px;height:30px;border-radius:50%;border:1px solid var(--line-2);display:grid;place-items:center;transition:transform .35s var(--ease),background .3s,border-color .3s}
+.q button .ic svg{width:14px;height:14px}
+.q button[aria-expanded="true"] .ic{transform:rotate(45deg);background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.q .a{display:grid;grid-template-rows:0fr;transition:grid-template-rows .4s var(--ease)}
+.q .a>div{overflow:hidden}
+.q .a p{padding:0 4px 22px;color:var(--fg-2);max-width:68ch}
+.q.open .a{grid-template-rows:1fr}
+
+/* Final CTA */
+.final .box{position:relative;overflow:hidden;border-radius:28px;border:1px solid var(--line-2);padding:clamp(40px,6vw,80px);text-align:center;display:grid;gap:22px;justify-items:center;background:radial-gradient(900px 400px at 50% 110%,var(--accent-glow),transparent 60%),var(--surface)}
+.final h2{font-size:clamp(2.2rem,5vw,3.6rem);max-width:16ch}
+.final .sub{text-align:center;margin-inline:auto}
+.contact-line{display:flex;gap:10px;align-items:center;flex-wrap:wrap;justify-content:center;font-size:.95rem;color:var(--fg-2)}
+.contact-line code{font-family:var(--font-mono);background:var(--surface-2);border:1px solid var(--line);padding:6px 12px;border-radius:8px;color:var(--fg);user-select:all}
+.copy{padding:7px 12px;border-radius:8px;border:1px solid var(--line-2);font-size:.82rem;font-weight:600;transition:border-color .2s,background .2s}
+.copy:hover{border-color:var(--accent-2)}
+.copy.ok{background:rgba(34,197,94,.12);border-color:var(--pass);color:var(--pass)}
+
+/* Footer */
+footer{border-top:1px solid var(--line);padding-block:40px;color:var(--fg-3);font-size:.9rem}
+footer .wrap{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:28px}
+footer h4{margin:0 0 10px;font-size:.78rem;letter-spacing:.1em;text-transform:uppercase;color:var(--fg-2)}
+footer ul{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+footer a:hover{color:var(--fg)}
+footer .legal{grid-column:1/-1;padding-top:22px;border-top:1px solid var(--line);display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;font-size:.82rem}
+
+/* Cursor */
+.cur{position:fixed;left:0;top:0;width:10px;height:10px;border-radius:50%;background:var(--accent-2);pointer-events:none;z-index:200;transform:translate(-50%,-50%);transition:width .25s var(--ease),height .25s var(--ease),background .25s,opacity .3s;mix-blend-mode:difference;opacity:0}
+.cur.on{opacity:1}
+.cur.big{width:44px;height:44px;background:rgba(255,255,255,.9)}
+@media (hover:none),(pointer:coarse){.cur{display:none}}
+
+/* Responsive */
+@media (max-width:980px){
+  .hero .wrap{grid-template-columns:1fr}
+  .cards{grid-template-columns:1fr}
+  .steps{grid-template-columns:1fr 1fr}
+  .steps::before{display:none}
+  .case{grid-template-columns:1fr}
+  footer .wrap{grid-template-columns:1fr 1fr}
+}
+@media (max-width:760px){
+  .links,.nav .cta-desk{display:none}
+  .burger{display:grid}
+  .stats .row{grid-template-columns:1fr}
+  .compare{grid-template-columns:1fr}
+  .vs{padding-block:4px}
+  .bar-row{grid-template-columns:1fr;gap:6px}
+  .steps{grid-template-columns:1fr}
+  footer .wrap{grid-template-columns:1fr}
+  .btn{white-space:normal}
+}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+  .terminal .ln{opacity:1;transform:none}
+  .bar-row .b i{width:var(--w)}
+  .cur{display:none}
+  .preloader{display:none}
+}
+</style>
+<style>[hidden]{display:none!important}</style>
+</head>
+<body>
+
+
+<div class="preloader" id="preloader" aria-hidden="true">
+  <div class="mark">
+    <svg class="ring" viewBox="0 0 44 44"><circle cx="22" cy="22" r="19"/><circle class="arc" cx="22" cy="22" r="19"/><path class="tick" d="M14 22.5l5.5 5.5L30 16.5"/></svg>
+    <span>Path<span style="color:var(--accent-2)">Proof</span></span>
+  </div>
+</div>
+
+<div class="bgfx" aria-hidden="true"><div class="grid"></div><div class="orb o1" data-parallax="0.25"></div><div class="orb o2" data-parallax="0.15"></div></div>
+<div class="cur" id="cur" aria-hidden="true"></div>
+
+<header class="nav" id="top">
+  <div class="wrap">
+    <a href="#top" class="logo" aria-label="PathProof home"><span class="lm"><svg viewBox="0 0 24 24" fill="none" stroke="#06130c" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7"/></svg></span>Path<em>Proof</em></a>
+    <nav class="links" aria-label="Primary">
+      <a href="#services">Services</a><a href="#pricing">Pricing</a><a href="#process">Process</a><a href="#faq">FAQ</a>
+    </nav>
+    <a href="#contact" class="btn btn-primary btn-sm cta-desk magnetic">Start with a free QA review call</a>
+    <button class="burger" id="burger" aria-expanded="false" aria-controls="mobile" aria-label="Menu"><span></span><span></span><span></span></button>
+  </div>
+  <div class="mobile" id="mobile">
+    <a href="#services">Services</a><a href="#pricing">Pricing</a><a href="#process">Process</a><a href="#faq">FAQ</a><a href="#contact" style="color:var(--accent-2)">Start with a free QA review call →</a>
+  </div>
+</header>
+
+<main>
+<section class="hero" id="hero">
+  <div class="wrap">
+    <div class="hero-copy">
+      <span class="pill hero-el"><i></i>Pilot engagements open · Fixed price only</span>
+      <h1 class="hero-el">Your critical user paths, <em>automated in 10 business days.</em></h1>
+      <p class="sub hero-el">Proof your critical paths work, before your users find out they don't. Senior QA leadership delivered with agentic-AI speed, and every output reviewed by a human who has done this for 13 years.</p>
+      <div class="ctas hero-el">
+        <a href="#contact" class="btn btn-primary magnetic">Start with a free QA review call <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+        <a href="#pricing" class="btn btn-ghost">See packages &amp; pricing</a>
+      </div>
+      <div class="note hero-el">
+        <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7"/></svg>Scope in writing before work starts</span>
+        <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7"/></svg>Never billed by the hour</span>
+        <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7"/></svg>You own the suite</span>
+      </div>
+    </div>
+
+    <div class="terminal hero-el" id="terminal" aria-label="Animated example of a Playwright test run" role="img" data-parallax="-0.06">
+      <div class="bar"><i></i><i></i><i></i><b>ci · regression · playwright</b></div>
+      <div class="body" id="termbody">
+        <div class="ln"><span class="cmd">$</span><span>npx playwright test --project=chromium</span></div>
+        <div class="ln"><span class="dim">Running 6 critical paths · 1 worker</span></div>
+        <div class="ln"><svg class="chk" viewBox="0 0 20 20"><circle cx="10" cy="10" r="8"/><path d="M6 10.5l2.5 2.5L14 7.5"/></svg><span>auth › sign in with email + MFA</span><span class="ms">1.8s</span></div>
+        <div class="ln"><svg class="chk" viewBox="0 0 20 20"><circle cx="10" cy="10" r="8"/><path d="M6 10.5l2.5 2.5L14 7.5"/></svg><span>checkout › add to cart → pay → confirmation</span><span class="ms">3.1s</span></div>
+        <div class="ln"><svg class="chk" viewBox="0 0 20 20"><circle cx="10" cy="10" r="8"/><path d="M6 10.5l2.5 2.5L14 7.5"/></svg><span>billing › update card, retry failed invoice</span><span class="ms">2.4s</span></div>
+        <div class="ln"><svg class="chk" viewBox="0 0 20 20"><circle cx="10" cy="10" r="8"/><path d="M6 10.5l2.5 2.5L14 7.5"/></svg><span>account › export data, delete account</span><span class="ms">2.0s</span></div>
+        <div class="ln"><svg class="chk" viewBox="0 0 20 20"><circle cx="10" cy="10" r="8"/><path d="M6 10.5l2.5 2.5L14 7.5"/></svg><span>admin › invite teammate, revoke access</span><span class="ms">1.6s</span></div>
+        <div class="ln"><svg class="chk" viewBox="0 0 20 20"><circle cx="10" cy="10" r="8"/><path d="M6 10.5l2.5 2.5L14 7.5"/></svg><span>notifications › email + in-app delivery</span><span class="ms">1.2s</span></div>
+        <div class="ln sum"><span><b>6 passed</b> <span class="dim">(12.1s)</span></span><span class="dim">flaky: 0</span><span class="dim">senior review: ✓</span></div>
+        <div class="ln"><span class="cmd">$</span><span class="cursor"></span></div>
+      </div>
+      <div class="glow"></div>
+    </div>
+  </div>
+</section>
+
+<div class="marquee" aria-hidden="true">
+  <div class="track" id="mqtrack">
+    <span>Fixed-price only</span><span>No hourly billing</span><span>Senior-reviewed</span><span>10-day delivery</span><span>Playwright · TypeScript</span><span>CI/CD integrated</span><span>You own the suite</span><span>AI, disclosed openly</span>
+  </div>
+</div>
+
+<section class="stats" aria-label="Key numbers">
+  <div class="wrap">
+    <div class="row">
+      <div class="stat reveal"><b><span class="num count" data-to="13">0</span><small>years</small></b><span>of QA leadership across manual and automation testing</span></div>
+      <div class="stat reveal"><b><span class="num count" data-to="10">0</span><small>business days</small></b><span>from kickoff to critical paths running in your CI</span></div>
+      <div class="stat reveal"><b><span class="num count" data-to="4">0</span><small>packages</small></b><span>fixed-price packages, scoped in writing before work starts</span></div>
+    </div>
+  </div>
+</section>
+
+<section id="services">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="eyebrow">Services</span>
+      <h2>Four ways to get proof your product works.</h2>
+      <p class="sub">Each package has a fixed price, a fixed timeline and a scope we write down before we start. Pick the one that matches where your testing is today.</p>
+    </div>
+    <div class="cards" id="pricing">
+      <article class="card flag reveal">
+        <div class="top"><div><h3>QA Sprint</h3><div class="for" style="margin-top:4px">For teams shipping with no QA or zero automation.</div></div><div class="price">$4,500–$7,500</div></div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap"><span class="badge acc">Flagship</span><span class="badge">Fixed price · 2 weeks</span></div>
+        <ul>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7"/></svg>Test strategy and risk analysis of your application</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7"/></svg>Manual test cases for in-scope features, AI-drafted and senior-reviewed</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7"/></svg>Critical user paths automated in Playwright / TypeScript, path count agreed in writing</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7"/></svg>CI integration, handover walkthrough and a 2-week warranty on our work</li>
+        </ul>
+        <div class="foot"><a href="#contact">Scope a QA Sprint <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></div>
+      </article>
+
+      <article class="card reveal">
+        <div class="top"><div><h3>Regression Rescue</h3><div class="for" style="margin-top:4px">For teams with a flaky, abandoned automation suite.</div></div><div class="price">$3,000–$6,000</div></div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap"><span class="badge">Fastest win</span><span class="badge">Fixed price · 1–2 weeks</span></div>
+        <ul>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7"/></svg>Audit report: what is broken, what is flaky, what is dead</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7"/></svg>Top flaky tests stabilized; unsalvageable tests rebuilt</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7"/></svg>CI integration your team can actually run</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7"/></svg>A plain pass / fail health report anyone can read</li>
+        </ul>
+        <div class="foot"><a href="#contact">Rescue my suite <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></div>
+      </article>
+
+      <article class="card reveal">
+        <div class="top"><div><h3>QA-as-a-Service</h3><div class="for" style="margin-top:4px">For startups with no QA function of their own.</div></div><div class="price">$2,800–$3,500<span style="font-size:.7em;color:var(--fg-3)">/mo</span></div></div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap"><span class="badge">Retainer · 3-month minimum</span></div>
+        <ul>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7"/></svg>Weekly regression runs against your staging environment</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7"/></svg>New-feature testing, up to 8 feature tickets per sprint</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7"/></svg>Bug reports with clean repro steps, severity and suggested priority</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7"/></svg>Release readiness report before you ship; the go / no-go call stays yours</li>
+        </ul>
+        <div class="foot"><a href="#contact">Talk about a retainer <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></div>
+      </article>
+
+      <article class="card reveal">
+        <div class="top"><div><h3>Risk &amp; Coverage Blueprint</h3><div class="for" style="margin-top:4px">The low-risk way to start: senior judgment on what to test, and why.</div></div><div class="price">$1,200–$2,000</div></div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap"><span class="badge">Fixed price · 1 week</span></div>
+        <ul>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7"/></svg>Risk-ranked test strategy for your application</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7"/></svg>Coverage map traced to your requirements or existing docs</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7"/></svg>Complete, structured test cases ready to run</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7"/></svg>Natural next step: automate it with a QA Sprint</li>
+        </ul>
+        <div class="foot"><a href="#contact">Start with a Blueprint <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></div>
+      </article>
+    </div>
+    <div class="addons reveal">
+      <b>Add-ons · $800–$1,500 each</b>
+      <span class="chip">Performance smoke testing</span><span class="chip">Accessibility audit</span><span class="chip">UAT coordination</span><span class="chip">Test-data setup</span><span class="chip new">AI feature testing (LLM evals)</span>
+    </div>
+  </div>
+</section>
+
+<section id="compare">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="eyebrow">The cost comparison</span>
+      <h2>Senior-level output, for less than one senior hire.</h2>
+      <p class="sub">One senior QA automation engineer in Canada costs about $110K a year once benefits and overhead are added. Every PathProof package costs less, starts in days, and comes with 13 years of judgment built in.</p>
+    </div>
+    <div class="compare">
+      <div class="cmp reveal">
+        <span class="k">Hiring in-house</span>
+        <div class="big num">$110K+<small> / year loaded</small></div>
+        <ul>
+          <li>About $9K a month, before recruiting fees</li>
+          <li>8–12 weeks to hire, then weeks to ramp</li>
+          <li>One person's skill set, one person's bandwidth</li>
+          <li>Tooling, management and turnover risk on you</li>
+        </ul>
+      </div>
+      <div class="vs reveal"><span>vs</span></div>
+      <div class="cmp win reveal">
+        <span class="k">PathProof QA Sprint</span>
+        <div class="big num">$4.5–7.5K<small> / fixed, 2 weeks</small></div>
+        <ul>
+          <li>Critical paths running in your CI in 10 business days</li>
+          <li>Senior review on every test case and script</li>
+          <li>Agentic-AI speed; one lead does the work of a small team</li>
+          <li>You keep the suite, the docs and the pipeline</li>
+        </ul>
+      </div>
+    </div>
+    <div class="bars reveal" id="bars">
+      <div class="bar-row"><span>Senior hire, 1 month</span><div class="b"><i style="--w:100%"></i></div><span class="num">≈ $9,000</span></div>
+      <div class="bar-row acc"><span>QA Sprint, midpoint</span><div class="b"><i style="--w:67%"></i></div><span class="num">$6,000</span></div>
+      <div class="bar-row acc"><span>Retainer, per month</span><div class="b"><i style="--w:35%"></i></div><span class="num">$2,800–3,500</span></div>
+    </div>
+    <p class="fine">Hire figure based on an average ~$90K base salary for senior QA automation engineers in Canada (PayScale, 2026) plus typical employer costs. All PathProof prices in CAD.</p>
+  </div>
+</section>
+
+<section id="process">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="eyebrow">Process</span>
+      <h2>From first call to running suite, in four steps.</h2>
+      <p class="sub">No discovery phases that drag on. We agree the scope, do the work, and hand it over with a warranty.</p>
+    </div>
+    <div class="steps">
+      <div class="step reveal"><div class="dot">1</div><span class="t">Day 0 · 30 min</span><h3>Free QA review call</h3><p>Tell us what you ship and where it breaks. You leave with a scoped, fixed-price recommendation.</p></div>
+      <div class="step reveal"><div class="dot">2</div><span class="t">Day 1–2</span><h3>Fixed scope in writing</h3><p>Paths, tickets and environments counted and agreed. 50% upfront, the rest on delivery.</p></div>
+      <div class="step reveal"><div class="dot">3</div><span class="t">Day 3–12</span><h3>10-day sprint</h3><p>AI drafts, a senior QA lead reviews, your CI runs it. You see progress every couple of days, not at the end.</p></div>
+      <div class="step reveal"><div class="dot">4</div><span class="t">Day 13+</span><h3>Handover + warranty</h3><p>Walkthrough, docs, and a 2-week warranty: any test failing because of our work, we fix.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="proof">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="eyebrow">Proof</span>
+      <h2>The first case study is being written right now.</h2>
+      <p class="sub">We don't publish invented testimonials or borrowed logos. This space is reserved for our pilot client's real numbers.</p>
+    </div>
+    <div class="case reveal">
+      <span class="badge tag">Pilot case study · coming soon</span>
+      <div>
+        <blockquote>"<mark>[Client quote goes here]</mark> Once the pilot ships, this is where their words, their numbers and their logo will live."</blockquote>
+        <div class="who">— [Name], [Role], [Company] · Pilot engagement</div>
+      </div>
+      <div class="nums">
+        <div class="n"><b>[38]</b><span>critical paths automated</span></div>
+        <div class="n"><b>[8]</b><span>business days</span></div>
+        <div class="n"><b>[0]</b><span>flaky tests at handover</span></div>
+        <div class="n"><b>[100%]</b><span>CI pass rate, week 2</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="faq">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="eyebrow">FAQ</span>
+      <h2>Straight answers.</h2>
+    </div>
+    <div class="faq">
+      <div class="q reveal"><button aria-expanded="false"><span>Do you use AI?</span><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></button><div class="a"><div><p>Yes, openly. Agentic AI drafts test cases and automation code, which is why we can deliver in days instead of months. A senior QA lead with 13 years of experience reviews every output before you see it. AI gives us speed; the human review is what you're paying for.</p></div></div></div>
+      <div class="q reveal"><button aria-expanded="false"><span>What if our existing suite is a mess?</span><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></button><div class="a"><div><p>That's what Regression Rescue is for. We audit what's broken, flaky and dead, stabilize what can be saved, rebuild what can't, and leave you with a health report your whole team can read. Most teams are embarrassed by their suite. We've seen worse.</p></div></div></div>
+      <div class="q reveal"><button aria-expanded="false"><span>Who fixes the bugs you find?</span><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></button><div class="a"><div><p>Your developers. We report bugs with clean reproduction steps, severity and suggested priority so fixes are fast. We don't change your application code, and release decisions stay with you.</p></div></div></div>
+      <div class="q reveal"><button aria-expanded="false"><span>What do you need from us?</span><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></button><div class="a"><div><p>Access to a staging environment, a test account or two, read access to your repo and CI, and someone who can answer questions within a day. If you have requirements or docs, great. If you don't, we work from the product itself.</p></div></div></div>
+      <div class="q reveal"><button aria-expanded="false"><span>Where does our code and data go?</span><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></button><div class="a"><div><p>We never put production data into AI tools. We test with synthetic data, and we provide a written AI and data handling statement before any engagement starts. Everything we deliver, including tests, scripts and the pipeline, belongs to you.</p></div></div></div>
+      <div class="q reveal"><button aria-expanded="false"><span>Why fixed price instead of hourly?</span><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></button><div class="a"><div><p>Hourly billing rewards slow work. Fixed pricing means you buy an outcome: a scope we agreed on, delivered on a date we agreed on. If we finish faster, that's our margin, not your bill.</p></div></div></div>
+    </div>
+  </div>
+</section>
+
+<section class="final" id="contact">
+  <div class="wrap">
+    <div class="box reveal">
+      <span class="eyebrow">Free QA review call</span>
+      <h2>Find out where your product breaks before your users do.</h2>
+      <p class="sub">A 30-minute call. Tell us what you ship, we tell you what we'd test first and what it would cost. No pitch deck, no obligation.</p>
+      <a href="https://calendar.google.com/calendar/appointments/schedules/AcZssZ1oaCCawt5608742viGpQ-y2eAk4__vB6-qdfqYKa9HigWW3iGgCVfdbBF-GotZiKPXFTyPKNdK" target="_blank" rel="noopener" class="btn btn-primary magnetic" id="bookbtn">Book the free review call <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+      <div class="contact-line">Or email <code id="email">rana@pathproofqa.ca</code><button class="copy" id="copybtn" type="button">Copy</button></div>
+      <p style="font-size:.84rem;color:var(--fg-3)">Rana Morthala · Founder &amp; Principal QA · British Columbia, Canada</p>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div>
+      <a href="#top" class="logo" style="margin-bottom:12px"><span class="lm"><svg viewBox="0 0 24 24" fill="none" stroke="#06130c" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7"/></svg></span>Path<em>Proof</em></a>
+      <p style="max-width:34ch">AI-accelerated QA services. Fixed price and retainer only, never hourly.</p>
+    </div>
+    <div><h4>Quick links</h4><ul><li><a href="#services">Services</a></li><li><a href="#pricing">Pricing</a></li><li><a href="#process">Process</a></li><li><a href="#faq">FAQ</a></li></ul></div>
+    <div><h4>Contact</h4><ul><li>rana@pathproofqa.ca</li><li>pathproofqa.ca</li><li>Langford, BC · Canada</li></ul></div>
+    <div class="legal"><span>© 2026 PathProof. All prices in CAD, plus applicable taxes.</span><span>Playwright · TypeScript · CI/CD</span></div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.18/dist/lenis.min.js"></script>
+<script>
+(function(){
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const hasGsap = typeof gsap !== 'undefined';
+  const fine = window.matchMedia('(hover:hover) and (pointer:fine)').matches;
+
+  /* Preloader */
+  const pre = document.getElementById('preloader');
+  const finishPre = () => pre && pre.classList.add('done');
+  if (reduce) finishPre(); else { window.addEventListener('load', () => setTimeout(finishPre, 1250)); setTimeout(finishPre, 3200); }
+
+  /* Smooth scroll (Lenis) */
+  let lenis = null;
+  if (!reduce && typeof Lenis !== 'undefined') {
+    lenis = new Lenis({ lerp: 0.1, smoothWheel: true });
+    if (hasGsap) { lenis.on('scroll', ScrollTrigger.update); gsap.ticker.add(t => lenis.raf(t * 1000)); gsap.ticker.lagSmoothing(0); }
+    else { const raf = t => { lenis.raf(t); requestAnimationFrame(raf); }; requestAnimationFrame(raf); }
+  }
+  /* Anchor links */
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', e => {
+      const id = a.getAttribute('href'); if (id.length < 2) return;
+      const el = document.querySelector(id); if (!el) return;
+      e.preventDefault(); closeMenu();
+      if (lenis) lenis.scrollTo(el, { offset: -72 }); else el.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth' });
+    });
+  });
+
+  /* Mobile menu */
+  const burger = document.getElementById('burger'), mobile = document.getElementById('mobile');
+  function closeMenu(){ burger.setAttribute('aria-expanded','false'); mobile.classList.remove('open'); }
+  burger.addEventListener('click', () => { const open = burger.getAttribute('aria-expanded') === 'true'; burger.setAttribute('aria-expanded', String(!open)); mobile.classList.toggle('open', !open); });
+
+  /* Marquee: duplicate track for seamless loop */
+  const mq = document.getElementById('mqtrack'); if (mq) mq.innerHTML += mq.innerHTML;
+
+  /* Terminal typing sequence */
+  const lines = Array.from(document.querySelectorAll('#termbody .ln'));
+  function runTerminal(){
+    lines.forEach(l => l.classList.remove('show'));
+    let t = 0;
+    lines.forEach((l, i) => { const d = i < 2 ? 500 : 420; t += d; setTimeout(() => l.classList.add('show'), t); });
+    return t;
+  }
+  if (reduce) lines.forEach(l => l.classList.add('show'));
+  else { const start = () => { const total = runTerminal(); setTimeout(start, total + 5000); }; setTimeout(start, 1500); }
+
+  /* Hero entrance */
+  if (hasGsap && !reduce) {
+    gsap.registerPlugin(ScrollTrigger);
+    gsap.from('.hero-el', { y: 28, opacity: 0, duration: .9, ease: 'power3.out', stagger: .11, delay: 1.3, clearProps: 'transform,opacity' });
+
+    /* Scroll reveals */
+    document.querySelectorAll('.reveal').forEach(el => {
+      gsap.from(el, { y: 32, opacity: 0, duration: .8, ease: 'power3.out', scrollTrigger: { trigger: el, start: 'top 88%', once: true }, clearProps: 'transform,opacity' });
+    });
+    /* Stagger cards within grids */
+    ['.cards', '.stats .row', '.steps'].forEach(sel => {
+      const kids = document.querySelectorAll(sel + ' > .reveal');
+      kids.forEach((k, i) => { ScrollTrigger.getAll().forEach(st => { if (st.trigger === k && st.animation) st.animation.delay(i * .08); }); });
+    });
+    /* Parallax */
+    document.querySelectorAll('[data-parallax]').forEach(el => {
+      const s = parseFloat(el.dataset.parallax);
+      gsap.to(el, { yPercent: s * 100, ease: 'none', scrollTrigger: { trigger: document.body, start: 'top top', end: 'bottom bottom', scrub: .6 } });
+    });
+  }
+
+  /* Counters */
+  const counters = document.querySelectorAll('.count');
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(en => {
+      if (!en.isIntersecting) return; io.unobserve(en.target);
+      const el = en.target, to = +el.dataset.to; if (reduce) { el.textContent = to; return; }
+      const t0 = performance.now(), dur = 1300;
+      const tick = now => { const p = Math.min(1, (now - t0) / dur), e = 1 - Math.pow(1 - p, 3); el.textContent = Math.round(to * e); if (p < 1) requestAnimationFrame(tick); };
+      requestAnimationFrame(tick);
+    });
+  }, { threshold: .5 });
+  counters.forEach(c => io.observe(c));
+
+  /* Comparison bars */
+  const bars = document.getElementById('bars');
+  if (bars) { const bo = new IntersectionObserver(es => { es.forEach(e => { if (e.isIntersecting) { bars.querySelectorAll('.bar-row').forEach((r, i) => setTimeout(() => r.classList.add('vis'), i * 150)); bo.disconnect(); } }); }, { threshold: .4 }); bo.observe(bars); }
+
+  /* FAQ accordion */
+  document.querySelectorAll('.q button').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const q = btn.parentElement, open = q.classList.contains('open');
+      document.querySelectorAll('.q.open').forEach(o => { o.classList.remove('open'); o.querySelector('button').setAttribute('aria-expanded','false'); });
+      if (!open) { q.classList.add('open'); btn.setAttribute('aria-expanded','true'); }
+    });
+  });
+
+  /* Card glow follow + tilt */
+  if (fine && !reduce) document.querySelectorAll('.card').forEach(card => {
+    card.addEventListener('pointermove', e => {
+      const r = card.getBoundingClientRect(), x = e.clientX - r.left, y = e.clientY - r.top;
+      card.style.setProperty('--mx', x + 'px'); card.style.setProperty('--my', y + 'px');
+      const rx = ((y / r.height) - .5) * -4, ry = ((x / r.width) - .5) * 4;
+      card.style.transform = `perspective(900px) rotateX(${rx}deg) rotateY(${ry}deg) translateY(-3px)`;
+    });
+    card.addEventListener('pointerleave', () => { card.style.transform = ''; });
+  });
+
+  /* Magnetic buttons */
+  if (fine && !reduce) document.querySelectorAll('.magnetic').forEach(b => {
+    b.addEventListener('pointermove', e => { const r = b.getBoundingClientRect(); const x = (e.clientX - r.left - r.width/2) * .22, y = (e.clientY - r.top - r.height/2) * .22; b.style.transform = `translate(${x}px,${y}px)`; });
+    b.addEventListener('pointerleave', () => { b.style.transform = ''; });
+  });
+
+  /* Custom cursor */
+  const cur = document.getElementById('cur');
+  if (fine && !reduce && cur) {
+    let cx = 0, cy = 0, tx = 0, ty = 0;
+    window.addEventListener('pointermove', e => { tx = e.clientX; ty = e.clientY; cur.classList.add('on'); });
+    const loop = () => { cx += (tx - cx) * .25; cy += (ty - cy) * .25; cur.style.transform = `translate(${cx}px,${cy}px) translate(-50%,-50%)`; requestAnimationFrame(loop); }; loop();
+    document.querySelectorAll('a,button').forEach(el => { el.addEventListener('pointerenter', () => cur.classList.add('big')); el.addEventListener('pointerleave', () => cur.classList.remove('big')); });
+    document.addEventListener('pointerleave', () => cur.classList.remove('on'));
+  }
+
+  /* Copy email */
+  const cb = document.getElementById('copybtn'), em = document.getElementById('email');
+  if (cb) cb.addEventListener('click', async () => {
+    const txt = em.textContent.trim();
+    try { await navigator.clipboard.writeText(txt); cb.textContent = 'Copied'; cb.classList.add('ok'); }
+    catch (e) { const r = document.createRange(); r.selectNodeContents(em); const s = getSelection(); s.removeAllRanges(); s.addRange(r); cb.textContent = 'Selected'; }
+    setTimeout(() => { cb.textContent = 'Copy'; cb.classList.remove('ok'); }, 1800);
+  });
+
+  /* Booking link placeholder guard */
+  const bb = document.getElementById('bookbtn');
+  if (bb && bb.getAttribute('href').startsWith('[')) bb.addEventListener('click', e => { e.preventDefault(); if (lenis) lenis.scrollTo('#email', { offset: -200 }); em.scrollIntoView({ block: 'center' }); em.animate([{ boxShadow: '0 0 0 0 var(--accent-glow)' }, { boxShadow: '0 0 0 10px transparent' }], { duration: 900 }); });
+})();
+</script>
+
+</body>
+</html>
